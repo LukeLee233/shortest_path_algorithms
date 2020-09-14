@@ -3,4 +3,4 @@ project(shortest_path_algorithms)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(shortest_path_algorithms main.cpp)
+add_executable(shortest_path_algorithms main.cpp json.hpp graph.cpp graph.h)
