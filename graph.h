@@ -63,5 +63,6 @@ public:
 };
 
 
+void dijkstra(GRAPH& graph);
 
 #endif //GRAPH_H

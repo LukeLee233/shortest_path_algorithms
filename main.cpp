@@ -6,7 +6,8 @@
 using namespace std;
 using json = nlohmann::json;
 
-bool test(const GRAPH& graph, const string& checkfile){
+bool test(const GRAPH &graph, const string &checkfile)
+{
     ifstream fin;
     vector<vector<int>> distance_matrix;
     vector<vector<vector<int>>> path;
@@ -19,8 +20,8 @@ bool test(const GRAPH& graph, const string& checkfile){
         j.at("path").get_to(path);
         fin.close();
     }
-    catch (ifstream::failure& e) {
-        cerr << "Exception opening/reading/closing "<<checkfile<<endl;
+    catch (ifstream::failure &e) {
+        cerr << "Exception opening/reading/closing " << checkfile << endl;
         exit(-1);
     }
 
@@ -40,10 +41,10 @@ bool test(const GRAPH& graph, const string& checkfile){
                 cout<<endl;
                 cout << i<< "->" << j << endl;
 
-                cout<<"graph info: "<< graph.distance_matrix[i][j] << endl;
-                for(auto route : graph.path[i][j]) cout<<route<<"->";
-                cout<<"\b\b"<<endl;
-                cout<<endl;
+                cout << "graph info: " << graph.distance_matrix[i][j] << endl;
+                for (auto route : graph.path[i][j]) cout << route << "->";
+                cout << "\b\b" << endl;
+                cout << endl;
 
                 cout<<"check sum: "<< check_sum <<endl;
                 cout<<"\b\b"<<endl;
@@ -81,8 +82,8 @@ int main()
         j.at("result_file").get_to(result_file);
         fin.close();
     }
-    catch (ifstream::failure& e) {
-        cerr << "Exception opening/reading/closing config file"<<endl;
+    catch (ifstream::failure &e) {
+        cerr << "Exception opening/reading/closing config file" << endl;
         exit(-1);
     }
 
@@ -92,6 +93,7 @@ int main()
             exit(-1);
         }
 
+        dijkstra(graph);
         cout<<graph<<endl;
 
         if(test(graph,result_file[i])){

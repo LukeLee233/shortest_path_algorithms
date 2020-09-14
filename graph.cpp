@@ -106,6 +106,77 @@ GRAPH::GRAPH(const string& filename, const string& type)
 
 }
 
+/*!
+ * Single source multi target shortest path algorithm
+ * one stipulation: non negative cost on every edge
+ * greedy idea
+ * @param graph
+ */
+void dijkstra(GRAPH &graph)
+{
+    typedef pair<int,int> MIN_NODE; // (node_id, cost)
+    vector<vector<bool>> direct_connect(graph.vertex_num + 1,vector<bool>
+        (graph.vertex_num + 1, false));
+
+    for (int i = 1; i <= graph.vertex_num; i++){
+        for(int j = 1;j<=graph.vertex_num;j++){
+            if(graph.distance_matrix[i][j] != inf)
+                direct_connect[i][j] = true;
+        }
+    }
+
+    for (int i = 1; i <= graph.vertex_num; i++){
+        vector<bool> visited(graph.vertex_num + 1, false);
+        visited[i] = true;
+
+        vector<int> distance = graph.distance_matrix[i];
+
+        for(int iter = 1; iter < graph.vertex_num; iter++){
+            MIN_NODE min_node{0, inf};
+
+            // choosing phase
+            for(int j = 1; j <= graph.vertex_num;j++){
+                if(visited[j])
+                    continue;
+
+                if(min_node.second > distance[j])
+                    min_node = { j,distance[j] };
+            }
+
+            if(min_node.second == inf) // means node i cannot reach any other nodes further
+                break;
+
+            int nearest_node = min_node.first;
+            visited[nearest_node] = true;
+            graph.path[i][nearest_node].push_back(nearest_node);
+
+            // relaxation phase
+            for(int j = 1; j<= graph.vertex_num;j++){
+                if(visited[j])
+                    continue;
+
+                if(direct_connect[nearest_node][j] && min_node.second + graph.distance_matrix[nearest_node][j] < distance[j]){
+                    distance[j] = min_node.second + graph.distance_matrix[nearest_node][j];
+                    graph.path[i][j] = graph.path[i][nearest_node];
+                }
+            }
+
+        }
+        graph.distance_matrix[i].swap(distance);
+
+
+    }
+
+    for(int i = 1;i<=graph.vertex_num;i++){
+        graph.path[i][i].clear();
+        for(int j = 1;j < graph.vertex_num;j++){
+            if(graph.distance_matrix[i][j] == inf)
+                graph.path[i][j].clear();
+        }
+    }
+
+}
+
 ostream &operator<<(ostream &os, const GRAPH &graph)
 {
     if(graph.distance_matrix.empty()){
