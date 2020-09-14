@@ -92,6 +92,7 @@ int main()
             exit(-1);
         }
 
+        floyd(graph);
         cout<<graph<<endl;
 
         if(test(graph,result_file[i])){

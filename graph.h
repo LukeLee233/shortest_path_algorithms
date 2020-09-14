@@ -62,6 +62,6 @@ public:
     friend ostream &operator<<(ostream &os, const GRAPH &graph);
 };
 
-
+void floyd(GRAPH& graph);
 
 #endif //GRAPH_H

@@ -6,6 +6,7 @@
 #include "fstream"
 #include "iostream"
 #include <queue>
+#include <functional>
 
 const int inf = 0x3f3f3f3f;
 
@@ -133,4 +134,59 @@ ostream &operator<<(ostream &os, const GRAPH &graph)
     }
 
     return os;
+}
+
+/*!
+ * Multi source multi target shortest path algorithm
+ * one stipulation: non negative cost on every edge
+ * dynamic programming idea
+ * @param graph
+ */
+void floyd(GRAPH &graph)
+{
+    // save the relaxation node on path (i->j)
+    vector<vector<int>> relax_node(graph.vertex_num + 1,vector<int>(graph.vertex_num+1,0));
+
+    // O(n^3) to get minimum path
+    for(int k = 1; k <= graph.vertex_num; k++){
+        for(int u = 1;u <= graph.vertex_num;u++){
+            for(int v = 1;v<=graph.vertex_num;v++){
+                if(graph.distance_matrix[u][k] + graph.distance_matrix[k][v] < graph.distance_matrix[u][v]){
+                    graph.distance_matrix[u][v] = graph.distance_matrix[u][k] + graph.distance_matrix[k][v];
+                    relax_node[u][v] = k;
+                }
+            }
+        }
+    }
+
+    function<vector<int>(int,int)> get_path = [&](int source,int terminal){
+        if(relax_node[source][terminal] == 0){
+            if(source == terminal)
+                return vector<int>{source};
+            else
+                return vector<int>{source,terminal};
+        }
+
+        vector<int> first_seg;
+        vector<int> second_seg;
+        int bypass = relax_node[source][terminal];
+        first_seg = get_path(source,bypass);
+        second_seg = get_path(bypass,terminal);
+        auto s2_begin = second_seg.begin();
+        while(first_seg.back() == *s2_begin)
+            s2_begin = next(s2_begin);
+
+        first_seg.insert(first_seg.end(),s2_begin,second_seg.end());
+        return first_seg;
+    };
+
+    for(int i = 1;i<=graph.vertex_num;i++){
+        for(int j = 1;j<=graph.vertex_num;j++){
+            if(i != j)
+                graph.path[i][j] = get_path(i,j);
+            else
+                graph.path[i][j].clear();
+        }
+    }
+
 }
