@@ -74,7 +74,7 @@ void BHW_PARSER::operator()(string filename, GRAPH &g)
             getline(fin,contenu);
         }
 
-
+        g.distance_matrix_bak = g.distance_matrix;
         fin.close();
     }
     catch (ifstream::failure& e) {
@@ -105,8 +105,6 @@ GRAPH::GRAPH(const string& filename, const string& type)
     }
 
 }
-
-
 
 ostream &operator<<(ostream &os, const GRAPH &graph)
 {

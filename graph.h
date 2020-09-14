@@ -42,6 +42,7 @@ class GRAPH
     friend class BASE_PARSER;
 public:
     vector<vector<int>> distance_matrix;
+    vector<vector<int>> distance_matrix_bak;
     vector<vector<vector<int>>> path;
     int vertex_num{};
     int edge_num{};

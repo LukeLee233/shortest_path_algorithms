@@ -26,7 +26,17 @@ bool test(const GRAPH& graph, const string& checkfile){
 
     for(int i = 1;i<=graph.vertex_num;i++){
         for(int j = 1; j<= graph.vertex_num;j++){
-            if(graph.distance_matrix[i][j] != distance_matrix[i-1][j-1] || graph.path[i][j] != path[i-1][j-1]){
+            int check_sum = 0;
+            vector<int> path_rotate = graph.path[i][j];
+
+            if(!path_rotate.empty()){
+                // left rotate vector 1 time
+                rotate(path_rotate.begin(),path_rotate.begin() + 1,path_rotate.end());
+                for(int pos = 0; pos<(int)path_rotate.size() - 1; pos++)
+                    check_sum += graph.distance_matrix_bak[graph.path[i][j][pos]][path_rotate[pos]];
+            }
+
+            if(graph.distance_matrix[i][j] != distance_matrix[i-1][j-1] || check_sum != distance_matrix[i-1][j-1]){
                 cout<<endl;
                 cout << i<< "->" << j << endl;
 
@@ -35,9 +45,14 @@ bool test(const GRAPH& graph, const string& checkfile){
                 cout<<"\b\b"<<endl;
                 cout<<endl;
 
+                cout<<"check sum: "<< check_sum <<endl;
+                cout<<"\b\b"<<endl;
+                cout<<endl;
+
                 cout<<"result: "<< distance_matrix[i-1][j-1]<<endl;
                 for(auto route : path[i-1][j-1]) cout<<route<<"->";
                 cout<<"\b\b"<<endl;
+
 
                 return false;
             }
