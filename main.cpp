@@ -66,7 +66,8 @@ bool test(const GRAPH& graph, const string& checkfile){
 int main()
 {
     string config_file("../config.json");
-    string instance_file;
+    vector<string> instance_file;
+    vector<string> result_file;
     string type;
     ifstream fin;
 
@@ -75,8 +76,9 @@ int main()
         fin.open(config_file);
         json j;
         fin >> j;
-        j.at("instance_file").get_to(instance_file);
         j.at("type").get_to(type);
+        j.at("instance_file").get_to(instance_file);
+        j.at("result_file").get_to(result_file);
         fin.close();
     }
     catch (ifstream::failure& e) {
@@ -84,17 +86,22 @@ int main()
         exit(-1);
     }
 
-    GRAPH graph(instance_file,type);
-    if(!graph.valid()){
-        exit(-1);
+    for(int i = 0;i<instance_file.size();i++){
+        GRAPH graph(instance_file[i],type);
+        if(!graph.valid()){
+            exit(-1);
+        }
+
+        cout<<graph<<endl;
+
+        if(test(graph,result_file[i])){
+            cout<<"result is correct\n";
+        }else{
+            cout<<"result is wrong\n";
+            exit(-1);
+        }
     }
 
-    cout<<graph;
-    if(test(graph,"../Instances/test/cbmix23.json")){
-        cout<<"result is correct\n";
-    }else{
-        cout<<"result is wrong\n";
-    }
 
     return 0;
 }

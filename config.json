@@ -1,4 +1,19 @@
 {
-  "instance_file": "../Instances/cbmix/CBMix23.dat",
-  "type": "bhw"
+  "type": "bhw",
+  "instance_file": [
+    "../Instances/cbmix/CBMix2.dat",
+    "../Instances/cbmix/CBMix8.dat",
+    "../Instances/cbmix/CBMix16.dat",
+    "../Instances/cbmix/CBMix19.dat",
+    "../Instances/cbmix/CBMix21.dat",
+    "../Instances/cbmix/CBMix23.dat"
+  ],
+  "result_file": [
+    "../Instances/test/cbmix2.json",
+    "../Instances/test/cbmix8.json",
+    "../Instances/test/cbmix16.json",
+    "../Instances/test/cbmix19.json",
+    "../Instances/test/cbmix21.json",
+    "../Instances/test/cbmix23.json"
+  ]
 }
