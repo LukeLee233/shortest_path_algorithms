@@ -180,12 +180,20 @@ void floyd(GRAPH &graph)
         return first_seg;
     };
 
+
     for(int i = 1;i<=graph.vertex_num;i++){
         for(int j = 1;j<=graph.vertex_num;j++){
             if(i != j)
                 graph.path[i][j] = get_path(i,j);
-            else
-                graph.path[i][j].clear();
+            else{
+                if(graph.distance_matrix[i][j] < 0){
+                    cout<< "Node "<< i << "in negative cycle!"<<endl;
+                    exit(-1);
+                }
+                else{
+                    graph.path[i][j].clear();
+                }
+            }
         }
     }
 
