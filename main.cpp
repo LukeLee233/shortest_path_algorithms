@@ -92,6 +92,7 @@ int main()
             exit(-1);
         }
 
+        SPFA(graph);
         cout<<graph<<endl;
 
         if(test(graph,result_file[i])){

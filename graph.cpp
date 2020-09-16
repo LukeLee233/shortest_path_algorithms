@@ -6,6 +6,7 @@
 #include "fstream"
 #include "iostream"
 #include <queue>
+#include <algorithm>
 
 const int inf = 0x3f3f3f3f;
 
@@ -133,4 +134,72 @@ ostream &operator<<(ostream &os, const GRAPH &graph)
     }
 
     return os;
+}
+
+void SPFA(GRAPH &graph)
+{
+    struct Edge{
+        int source,target;
+        int cost;
+        Edge(int source, int target, int cost)
+            : source(source), target(target), cost(cost)
+        {}
+    };
+
+    vector<vector<Edge>> adjacent(graph.vertex_num + 1,vector<Edge>());
+    for(int i = 1;i <= graph.vertex_num;i++){
+        for(int j = 1; j <= graph.vertex_num;j++){
+            adjacent[i].emplace_back(Edge(i,j,graph.distance_matrix_bak[i][j]));
+        }
+    }
+
+    for(int i = 1;i<=graph.vertex_num;i++){
+        vector<int> distance(graph.vertex_num + 1, inf);
+        vector<int> predecessor(graph.vertex_num + 1, 0);
+        distance[i] = 0;
+        vector<int> cnt(graph.vertex_num + 1, 0);
+        queue<int> relax_queue;
+        vector<bool> in_queue(graph.vertex_num + 1,false);
+
+        relax_queue.push(i);
+        in_queue[i] = true;
+
+        while (!relax_queue.empty()){
+            int cur_node = relax_queue.front();
+            relax_queue.pop();
+            in_queue[cur_node] = false;
+
+            for(const auto& edge : adjacent[cur_node]){
+                if(distance[edge.target] > distance[edge.source] + edge.cost){
+                    distance[edge.target] = distance[edge.source] + edge.cost;
+                    predecessor[edge.target] = edge.source;
+                    if(!in_queue[edge.target]){
+                        relax_queue.push(edge.target);
+                        in_queue[edge.target] = true;
+                        cnt[edge.target]++;
+                        if(cnt[edge.target] > graph.vertex_num){
+                            cout<<"Graph "<< graph.name << " has negative cycle!"<<endl;
+                            graph.distance_matrix.clear();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        graph.distance_matrix[i] = distance;
+        for (int j = 1; j <= graph.vertex_num; j++) {
+            if (i == j)
+                graph.path[i][j] = vector<int>();
+            else {
+                graph.path[i][j].clear();
+                for (int cur = j; cur != 0; cur = predecessor[cur]) {
+                    graph.path[i][j].push_back(cur);
+                }
+                reverse(graph.path[i][j].begin(), graph.path[i][j].end());
+            }
+        }
+
+    }
+
 }
